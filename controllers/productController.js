@@ -21,13 +21,13 @@ router.use(function timeLog (req, res, next) {
 })
 
 /// ..................................................
-router.get('/', productPage);
-function productPage(req, res) {
-    res.render('product');
-}
+// router.get('/', productPage);
+// function productPage(req, res) {
+//     res.render('product');
+// }
 
 /// ..................................................
-router.get('/list', listProductPage);
+router.get('/', listProductPage);
 function listProductPage(req, res) {
   mongoose.connect( dbconfig.urldb, {useNewUrlParser: true, useUnifiedTopology: true} ,
     function(err) {
@@ -56,16 +56,16 @@ function productViewPage(req, res) {
     MongoClient.connect( dbconfig.urldb, { useUnifiedTopology: true }, function(err, db) {
             if (err) throw err;
             var dbo = db.db( dbconfig.dbname );
-            dbo.collection("product").find({}).toArray(function(err, productlist) {
+            dbo.collection("product").find({}).toArray(function(err, productview) {
               if (err) throw err;
               
-                res.render("product-list",  {
+                res.render("productview",  {
                     title: "ATN-Shop PRODUCT page", 
                     username: "",
-                    products : productlist 
+                    products : productview
                     , configHeader: null , currpage: "Product"
                     });
-                console.log('Found:', productlist);
+                console.log('Found:', productview);
 
               db.close();
             });

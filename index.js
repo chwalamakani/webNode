@@ -22,7 +22,6 @@ var bodyParser = require('body-parser');
 app.set('views', path.join( __dirname, 'views'));
 app.set('view engine', 'ejs');
 
-
 /// ................................................................
 /// 					 		Config
 /// ................................................................
@@ -53,7 +52,7 @@ var sessOptions = {
    
 if (app.get('env') === 'production') {
     app.set('trust proxy', 1); // trust first proxy
-    sess.cookie.secure = true; // serve secure cookies
+    session_cookie_secure = true // serve secure cookies
 }
    
 app.use(session( sessOptions ));
@@ -93,9 +92,17 @@ app.use('/product', productControl );
 var orderControl = require('./controllers/orderController');
 app.use('/order', orderControl );
 
+/*--- Login ---*/
+var loginControl = require('./controllers/loginController');
+app.use('/login', loginControl );
+
 /*--- Report ---*/
 var reportControl = require('./controllers/reportController');
 app.use('/report', reportControl );
+
+/*--- Payment ---*/
+var paymentControl = require('./controllers/paymentController');
+app.use('/payment', paymentControl );
 
 
 /*--- WEB QR Code ---*/
