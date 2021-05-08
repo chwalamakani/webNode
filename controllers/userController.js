@@ -38,25 +38,38 @@ function userPage(req, res) {
 
     var dataU = {
       _id : new mongoose.Types.ObjectId(),
-      username : req.query.username,
-      password : req.query.password
+      username : "",
+      password : ""
     };
 
-    // req.params.username,
-    mongoose.connect( dbconfig.urldb, {useNewUrlParser: true, useUnifiedTopology: true} ,
-      function(err) {
-        if (err) throw err;
-        var User = mongoose.model("User", UserSchema, "user");
-        var newU = new User(dataU);
+    if (req.query.username != undefined && req.query.username != null) {
+      dataU.username = req.query.username;
+    }
+  
+    if (req.query.password != undefined && req.query.password != null) {
+      dataU.password = req.query.password;
+    }
+  
+    if ( dataU.username != "") {
+      mongoose.connect( dbconfig.urldb, {useNewUrlParser: true, useUnifiedTopology: true} ,
+        function(err) {
+          if (err) throw err;
+      
+          var User = mongoose.model("User", UserSchema, "user");
+      
+          var newU = new User(dataU);
 
-        newU.save(
-          function (err) {
-            if (err) return handleError(err);
-            console.log("\n\t --- create new USER ! ", dataU);
-          }
-        );
-      }
-    );
+          newU.save(
+      
+            function (err) {
+              if (err) throw err;
+              console.log("\n\t --- create new USER ! ", dataU);
+            }
+        
+          );
+        }
+      );
+    }
   
       
     res.render('user-create');
@@ -75,30 +88,45 @@ function loginPage(req, res) {
     req.body
   );
 
+
   var xquery = {
-    username : req.query.username,
-    password : req.query.password
+    username : "",
+    password : ""
   };
   
+  if (req.query.username != undefined && req.query.username != null) {
+    xquery.username = req.query.username;
+  }
 
-  mongoose.connect( dbconfig.urldb, {useNewUrlParser: true, useUnifiedTopology: true} ,
-    function(err) {
-      if (err) throw err;
-      var User = mongoose.model("User", UserSchema, "user");
+  if (req.query.password != undefined && req.query.password != null) {
+    xquery.password = req.query.password;
+  }
 
-      User.findOne( xquery , 
-        function (err, obj) {
-          if (err) return handleError(err);
-          if (obj == null ) {
-            console.log("\n\t--- ko co ", obj, xquery);
-          } else {
-            console.log("\n\t--- co ton tai 1 Acc ", obj);
+  if ( xquery.username != "") {
+    mongoose.connect( dbconfig.urldb, {useNewUrlParser: true, useUnifiedTopology: true} ,
+    
+      function(err) {
+        if (err) throw err;
+      
+        var User = mongoose.model("User", UserSchema, "user");
+
+        User.findOne( xquery , 
+      
+          function (err, obj) {
+            if (err) throw err;
+        
+            if (obj == null ) {
+              console.log("\n\t--- ko co ", obj, xquery);
+            } else {
+              console.log("\n\t--- co ton tai 1 Acc ", obj);
+              // ghi nhận việc LOGIN thành công
+            }
+            
           }
-          
-        }
-      );
-    }
-  );
+        );
+      }
+    );
+  }
 
     res.render('login');
 }
